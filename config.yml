@@ -1,0 +1,30 @@
+# Config should be simple enough, however I have yet to work out how to put comments in; so in the meantime if you need more description please go to my github: pure1.github.io
+
+# commands, in order of steps. 
+commands:
+  # gives player an iron sword when they reach the first step.
+  1: ksd IRON_SWORD 1
+  # gives player an gold sword when they reach the first step.
+  10: ksd GOLD_SWORD 1
+  # gives player an diamond sword when they reach the first step.
+  100: ksd  DIAMOND_SWORD 1
+  # sets time to day
+  1000: time set 0
+
+## Variables ##
+# &name = The name of the player who reaches a step.
+# &randName = a randomly picked name from the server list.
+# &kills = The number of kills the player has made. 
+
+## Config commands ##
+# msd [item] <amount> = mobstreak drop, does nothing out side of this config, drop the desired items where the entity that was killed died.
+
+# Tell player their kills when they kill someone?
+tell-kills: true
+
+# Tell everyone the players streak when they die.
+broadcast-on-death: true
+
+# Save the streaks on stop/reload?
+Save-streaks: true
+

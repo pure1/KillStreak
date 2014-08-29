@@ -1,3 +1,10 @@
+========= Update 0.1.0 =========
+
++ Added all the command branches that were missing.
++ Made 95% of the commands work.
+- Still missing Leaderboard/highscoreboard.
++ Moved some classes around to make workflow faster, and plugin dependant classes more obvious.
+
 ========= Update 0.0.1 =========
 
 + Got the plugin into some kind of working order.

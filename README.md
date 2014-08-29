@@ -6,9 +6,9 @@ For info on how the config works, open the config.yml from the github, all comme
 
 Commands:
 
-"/ks" -- shows your kill streak.
-"/ks [player]" -- shows player's streak.
-"/ks help" -- shows help.
-"/ks config" -- shows config help.
-"/ks kills" -- shows kills help.
++ "/ks" -- shows your kill streak.
++ "/ks [player]" -- shows player's streak.
++ "/ks help" -- shows help.
++ "/ks config" -- shows config help.
++ "/ks kills" -- shows kills help.
 

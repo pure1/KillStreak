@@ -7,7 +7,7 @@ commands:
 permissions:
   KillStreak.*:
     description: Gives access to all Kill Streak Commands
-version: 1.0
+version: 0.1.0
 
 
 

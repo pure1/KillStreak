@@ -6,6 +6,12 @@
 
 package io.github.pure1.killstreak;
 
+import io.github.pure1.killstreak.handlers.CommandHandler;
+import io.github.pure1.killstreak.handlers.KillHandler;
+import io.github.pure1.killstreak.listeners.killStreakListener;
+import io.github.pure1.plugin.utils.ConfigAccessor;
+import io.github.pure1.plugin.utils.Metrics;
+
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.HashMap;
@@ -83,54 +89,9 @@ public class killStreak extends JavaPlugin {
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label,
-			String[] args) {
-		if (cmd.getName().equalsIgnoreCase("killstreak")) {
-			if (args.length == 0) {
-				if (sender instanceof Player) {
-					sender.sendMessage("[" + pluginName + "]"
-							+ " You have killed "
-							+ KillHandler.getKills((Player) sender)
-							+ " player(s).");
-				}
-			}
-			if (args.length > 0) {
-				if (args[0].equalsIgnoreCase("config")) {
-					if (args.length > 1)
-						if (args[1].equalsIgnoreCase("get")) {
-							if (args.length > 2) {
-								System.out.println("poe");
-								if (args[2].equalsIgnoreCase("commands")) {
-									// /current commands
-									Map<String, Object> map = config
-											.getHashMap("commands");
-									Object[] a = map.keySet().toArray();
-									int last = 0;
-									int l = 0;
-									for (int i = 0; i < a.length; i++) {
-										if (Integer.parseInt(a[i].toString()) > last) {
-											last = Integer.parseInt(a[i]
-													.toString());
-											l = i;
-										}
-									}
-									for (int i = 0; i <= Integer.parseInt(a[l]
-											.toString()); i++) {
-										if (!(map.get("" + i) == null)) {
-											sender.sendMessage(i
-													+ ": "
-													+ map.get("" + i)
-															.toString());
-										}
-									}
-									return false;
-								}
-							}
-						}
-				}
-
-			}
-		}
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if(cmd.getName().equalsIgnoreCase("KillStreak"))
+			CommandHandler.command(sender, args);
 		return false;
 	}
 }

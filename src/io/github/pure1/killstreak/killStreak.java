@@ -13,14 +13,10 @@ import io.github.pure1.plugin.utils.ConfigAccessor;
 import io.github.pure1.plugin.utils.Metrics;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -90,8 +86,10 @@ public class killStreak extends JavaPlugin {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(cmd.getName().equalsIgnoreCase("KillStreak"))
+		if(cmd.getName().equalsIgnoreCase("KillStreak")){
 			CommandHandler.command(sender, args);
+		}
+				
 		return false;
 	}
 }

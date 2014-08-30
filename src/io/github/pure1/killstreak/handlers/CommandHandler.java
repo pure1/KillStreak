@@ -1,14 +1,12 @@
 package io.github.pure1.killstreak.handlers;
 
-import java.util.Map;
-
 import io.github.pure1.killstreak.killStreak;
+
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
@@ -45,7 +43,7 @@ public abstract class CommandHandler {
 
 	public static void command(CommandSender sender, String[] args) {
 		if (args.length == 0) {
-			if (sender instanceof Player) {
+			if (sender instanceof Player && sender.hasPermission("killstreak.killstreak")) {
 				sender.sendMessage("[" + killStreak.pluginName + "]"
 						+ " You have killed "
 						+ KillHandler.getKills((Player) sender) + " player(s).");
@@ -54,7 +52,8 @@ public abstract class CommandHandler {
 		}
 		switch (args[0]) {
 		case "help":
-			argsHelp(sender);
+			if(sender.hasPermission("killstreak.help"))
+				argsHelp(sender);
 			break;
 		case "kills":
 			argsKills(sender, args);
@@ -63,7 +62,8 @@ public abstract class CommandHandler {
 			argsConfig(sender, args);
 			break;
 		default:
-			argsPlayer(sender, args[0]);
+			if(sender.hasPermission("killstreak.player"))
+				argsPlayer(sender, args[0]);
 		}
 
 	}
@@ -100,34 +100,44 @@ public abstract class CommandHandler {
 	 */
 	private static void argsConfig(CommandSender sender, String[] args) {
 		if(args.length == 1){
-			configHelp(sender);
+			if(sender.hasPermission("killstreak.config.help"))
+				configHelp(sender);
 			return;
 		}
 		if(args.length == 2){
 			switch(args[1]){
 			case "set": 
-				configSetHelp(sender);
+				if(sender.hasPermission("killstreak.config.set"))
+					configSetHelp(sender);
 				break;
 			case "get": 
-				configGetHelp(sender);
+				if(sender.hasPermission("killstreak.config.get"))
+					configGetHelp(sender);
 				break;
 			case "commands": 
+				if(sender.hasPermission("killstreak.config.commands.help"))
 				configCommandsHelp(sender);
 				break;
-			default: configHelp(sender);
+			default:
+				if(sender.hasPermission("killstreak.config.help"))
+					configHelp(sender);
 			}
 		}else{
 			switch(args[1]){
-			case "set": 
-				configSet(sender, args);
+			case "set":
+				if(sender.hasPermission("killstreak.config.set"))
+					configSet(sender, args);
 				break;
-			case "get": 
-				configGet(sender, args);
+			case "get":
+				if(sender.hasPermission("killstreak.config.get"))
+					configGet(sender, args);
 				break;
-			case "commands": 
+			case "commands":	
 				configCommands(sender, args);
 				break;
-			default: configHelp(sender);
+			default: 
+				if(sender.hasPermission("killstreak.config.help"))
+					configHelp(sender);
 			}
 		}
 	}
@@ -242,34 +252,45 @@ public abstract class CommandHandler {
 	
 	private static void argsKills(CommandSender sender, String[] args) {
 		if(args.length == 1){
-			killsHelp(sender);
+			if(sender.hasPermission("killstreak.kills.help"))
+				killsHelp(sender);
 			return;
 		}
 		if(args.length == 2){
 			switch(args[1]){
 			case "set": 
-				killsSetHelp(sender);
+				if(sender.hasPermission("killstreak.kills.set"))
+					killsSetHelp(sender);
 				break;
-			case "remove": 
-				killsRemoveHelp(sender);
+			case "remove":
+				if(sender.hasPermission("killstreak.kills.remove"))
+					killsRemoveHelp(sender);
 				break;
-			case "add": 
-				killsAddHelp(sender);
+			case "add":
+				if(sender.hasPermission("killstreak.kills.add"))
+					killsAddHelp(sender);
 				break;
-			default: killsHelp(sender);
+			default: 
+				if(sender.hasPermission("killstreak.kills.help"))
+				killsHelp(sender);
 			}
 		}else{
 			switch(args[1]){
-			case "set": 
-				killsSet(sender, args);
+			case "set":
+				if(sender.hasPermission("killstreak.kills.set"))
+					killsSet(sender, args);
 				break;
-			case "remove": 
-				killsRemove(sender, args);
+			case "remove":
+				if(sender.hasPermission("killstreak.kills.remove"))
+					killsRemove(sender, args);
 				break;
 			case "add": 
-				killsAdd(sender, args);
+				if(sender.hasPermission("killstreak.kills.add"))
+					killsAdd(sender, args);
 				break;
-			default: killsHelp(sender);
+			default:
+				if(sender.hasPermission("killstreak.kills.help"))
+					killsHelp(sender);
 			}
 		}
 	}
@@ -348,11 +369,11 @@ public abstract class CommandHandler {
 
 	private static void argsHelp(CommandSender sender) {
 		sender.sendMessage("[" + killStreak.pluginName + " Help" + "]");
-		sender.sendMessage("/ks  --------- show your kills");
-		sender.sendMessage("/ks [player] ----- show a players kills");
+		sender.sendMessage("/ks  ---------- show your kills");
+		sender.sendMessage("/ks [player] -- show a players kills");
 		sender.sendMessage("/ks kills ----- show kills help");
-		sender.sendMessage("/ks config -- show config help");
-		sender.sendMessage("/ks help -- show this");
+		sender.sendMessage("/ks config ---- show config help");
+		sender.sendMessage("/ks help ------ show this");
 	}
 
 	// if (cmd.getName().equalsIgnoreCase("killstreak")) {

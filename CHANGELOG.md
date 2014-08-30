@@ -1,3 +1,7 @@
+========= Update 0.1.1 =========
+
++added permissions
+
 ========= Update 0.1.0 =========
 
 + Added all the command branches that were missing.

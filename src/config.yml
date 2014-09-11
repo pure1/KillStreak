@@ -13,11 +13,10 @@ commands:
 
 ## Variables ##
 # &name = The name of the player who reaches a step.
-# &randName = a randomly picked name from the server list.
 # &kills = The number of kills the player has made. 
 
 ## Config commands ##
-# msd [item] <amount> = mobstreak drop, does nothing out side of this config, drop the desired items where the entity that was killed died.
+# ksd [item] <amount> = killstreak drop, does nothing out side of this config, drop the desired items where the player that was killed died.
 
 # Tell player their kills when they kill someone?
 tell-kills: true

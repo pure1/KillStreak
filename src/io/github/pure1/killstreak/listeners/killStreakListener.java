@@ -20,7 +20,7 @@ public class killStreakListener implements Listener {
 
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e){
-		if(e.getEntity().getKiller() instanceof Player){
+		if(e.getEntity().getKiller() instanceof Player && e.getEntity().getKiller().hasPermission("killstreak.kill")){
 			KillHandler.addKill(e);
 		}
 		KillHandler.Death(e.getEntity());

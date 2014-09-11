@@ -5,6 +5,8 @@ import io.github.pure1.killstreak.killStreak;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
@@ -27,17 +29,21 @@ public abstract class KillHandler {
 			killer.sendMessage("[" + killStreak.pluginName + "] " + " You have " + getKills(killer) + " kill(s).");
 		rewardPlayer(e);
 	}
-	public static void addKills(Player player, int k) {
+	public static void addKills(OfflinePlayer player, int k) {
 		UUID pid = player.getUniqueId();
 		kills.put(pid.toString(), getKills(player)+k);
 		if(killStreak.config.getBoolean("tell-kills"))
-			player.sendMessage("[" + killStreak.pluginName + "] " + " Your kills have been set to " + getKills(player));
+			try{
+				player.getPlayer().sendMessage("[" + killStreak.pluginName + "] " + " Your kills have been set to " + getKills(player));
+			}catch(NullPointerException e){}
 	}
-	public static void setKills(Player player, int k) {
+	public static void setKills(OfflinePlayer player, int k) {
 		UUID pid = player.getUniqueId();
 		kills.put(pid.toString(), k);
 		if(killStreak.config.getBoolean("tell-kills"))
-			player.sendMessage("[" + killStreak.pluginName + "] " + " Your kills have been set to " + getKills(player));
+		try{
+			player.getPlayer().sendMessage("[" + killStreak.pluginName + "] " + " Your kills have been set to " + getKills(player));
+		}catch(NullPointerException e){}
 	}
 
 	private static void rewardPlayer(PlayerDeathEvent e) {
@@ -58,7 +64,7 @@ public abstract class KillHandler {
 		kills.remove(entity.getUniqueId().toString());
 	}
 
-	public static int getKills(Player player) {
+	public static int getKills(OfflinePlayer player) {
 		UUID pid = player.getUniqueId();
 		try{
 			return Integer.parseInt(kills.get(pid.toString()).toString());
@@ -70,9 +76,11 @@ public abstract class KillHandler {
 		killStreak.kills.setHashMap("kills", kills);
 	}
 
-	public static void removeKills(Player player) {
+	public static void removeKills(OfflinePlayer player) {
 		kills.remove(player.getUniqueId().toString());
-		player.sendMessage("[" + killStreak.pluginName + "] " + " Your kills have been set to " + getKills(player));
+		try{
+			player.getPlayer().sendMessage("[" + killStreak.pluginName + "] " + " Your kills have been set to " + getKills(player));
+		}catch(NullPointerException e){}
 	}
 
 }

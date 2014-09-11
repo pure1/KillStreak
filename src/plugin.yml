@@ -63,13 +63,10 @@ permissions:
   killstreak.config.commands.set:
     description: gives access to the /killstreak config commands set command
     default: false
-  killstreak.config.commands.add:
-    description: gives access to the /killstreak config commands add command
-    default: false
   killstreak.config.commands.remove:
     description: gives access to the /killstreak config commands remove command
     default: false
-  killstreak.config.commands.remove:
+  killstreak.config.commands.help:
     description: gives access to the /killstreak config commands command
     default: false
       

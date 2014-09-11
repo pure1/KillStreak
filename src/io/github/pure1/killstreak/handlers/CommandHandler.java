@@ -7,6 +7,7 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -24,6 +25,7 @@ public abstract class CommandHandler {
 		for (String c : commands) {
 			if (command.contains("ksd")) {
 				String[] d = c.split(" ");
+				System.out.println(d);
 				ItemStack i = new ItemStack(Material.getMaterial(d[1]
 						.toUpperCase()), Integer.parseInt(d[2]));
 				e.getEntity()
@@ -31,7 +33,7 @@ public abstract class CommandHandler {
 						.dropItemNaturally(
 								e.getEntity().getEyeLocation().add(0d, 1d, 0d),
 								i);
-				System.out.println(ChatColor.GREEN + "[" + ChatColor.RED + killStreak.pluginName + ChatColor.GREEN + "]" + " Item "
+				System.out.println("[" + killStreak.pluginName + "]" + " Item "
 						+ i.getType().name() + " dropped");
 			} else {
 				Bukkit.getServer()
@@ -68,14 +70,14 @@ public abstract class CommandHandler {
 	}
 
 	private static void argsPlayer(CommandSender sender, String string) {
-		for(Player player: Bukkit.getOnlinePlayers()){
-			if(player.getDisplayName().equalsIgnoreCase(string)){
-				sendPrefixMessage(sender, player.getDisplayName() + " has killed "
+		for(OfflinePlayer player: Bukkit.getServer().getOfflinePlayers()){
+			if(player.getName().equalsIgnoreCase(string)){
+				sendPrefixMessage(sender, player.getName() + " has killed "
 						+ KillHandler.getKills(player) + " player(s).");
 				return;
 			}
 		}
-		sendPrefixMessage(sender, "Sorry, " + string + " is not online, or has not killed anyone.");
+		sendPrefixMessage(sender, "Sorry, " + string + " has never been on this server.");
 	}
 
 	/*
@@ -179,35 +181,11 @@ public abstract class CommandHandler {
 			sendPrefixMessage(sender, "save-streaks is " + killStreak.config.getBoolean("save-streaks"));
 			break;
 		case "commands":
-			sendPrefixMessage(sender, "Current commands are:");
-			 Map<String, Object> map = killStreak.config.getHashMap("commands");
-			 Object[] a = map.keySet().toArray();
-			 int last = 0;
-			 int l = 0;
-			 for (int i = 0; i < a.length; i++) {
-				 if (Integer.parseInt(a[i].toString()) > last) {
-					 last = Integer.parseInt(a[i].toString());
-					 l = i;
-				 }
-			 }
-			 for (int i = 0; i <= Integer.parseInt(a[l].toString()); i++) {
-				 if (!(map.get("" + i) == null)) {
-					 sendMessage(sender, i + ": " + map.get("" + i).toString());
-				 }
-			 }
+			configCommandsGet(sender);
 			break;
 		default: configGetHelp(sender);
 		}
 	}
-
-
-
-	private static void configCommands(CommandSender sender, String[] args) {
-		sendPrefixMessage(sender, ChatColor.GREEN + "[" + ChatColor.RED + "Config Help" + ChatColor.GREEN + "]");
-		sendMessage(sender, "Sorry I havent got to this bit yet");
-	}
-
-
 
 	private static void configGetHelp(CommandSender sender) {
 		sendPrefixMessage(sender, ChatColor.GREEN + "[" + ChatColor.RED + "Config Help" + ChatColor.GREEN + "]");
@@ -229,6 +207,110 @@ public abstract class CommandHandler {
 		sendMessage(sender, "broadcast-on-death");
 		sendMessage(sender, "save-streaks");
 	}
+
+	private static void configCommands(CommandSender sender, String[] args) {
+		if(args.length == 3){
+			switch(args[2]){
+			case "set":
+				if(sender.hasPermission("killstreak.config.commands.set"))
+					configCommandsSetHelp(sender);
+				break;
+			case "get":
+				if(sender.hasPermission("killstreak.config.commands.get"))
+					configCommandsGet(sender);
+				break;
+			case "remove":
+				if(sender.hasPermission("killstreak.config.commands.remove"))
+					configCommandsRemoveHelp(sender);
+				break;
+			default:
+				if(sender.hasPermission("killstreak.config.commands.help"))
+					configCommandsHelp(sender);
+			}
+		}else{
+			switch(args[2]){
+			case "set":
+				if(sender.hasPermission("killstreak.config.commands.set"))
+					configCommandsSet(sender, args);
+				break;
+			case "get":
+				if(sender.hasPermission("killstreak.config.commands.get"))
+					configCommandsGet(sender);
+				break;
+			case "remove":
+				if(sender.hasPermission("killstreak.config.commands.remove"))
+					configCommandsRemove(sender, args);
+				break;
+			default:
+				if(sender.hasPermission("killstreak.config.commands.help"))
+					configCommandsHelp(sender);
+			}
+		}
+	}
+
+	
+	private static void configCommandsSetHelp(CommandSender sender) {
+		sendPrefixMessage(sender, ChatColor.GREEN + "[" + ChatColor.RED + "Commands Help" + ChatColor.GREEN + "]");
+		sendMessage(sender, "ussage: /ks config commands set [kills] [command]");
+		sendMessage(sender, "Set will add to commands, if the number of kills has not previously been set.");
+		sendMessage(sender, "Kills is the number of kills that must be reached.");
+		sendMessage(sender, "Command is the command that will be run when that happens.");
+		sendMessage(sender, "--------- Variables ---------");
+		sendMessage(sender, "&name - the player who made the kill");
+		sendMessage(sender, "&kills - the players number of kills");
+		sendMessage(sender, "ksd [item] <amount> - drops [item] <amount> where player died");
+	}
+
+	private static void configCommandsRemoveHelp(CommandSender sender) {
+		sendPrefixMessage(sender, ChatColor.GREEN + "[" + ChatColor.RED + "Commands Help" + ChatColor.GREEN + "]");
+		sendMessage(sender, "ussage: /ks config commands remove [kills]");
+	}
+
+
+
+	private static void configCommandsRemove(CommandSender sender, String[] args) {
+		 Map<String, Object> map = killStreak.config.getHashMap("commands");
+		 map.remove(args[3]);
+		 killStreak.config.setHashMap("commands", map);
+		 killStreak.config.saveConfig();
+		 sendPrefixMessage(sender, "Command removed.");
+	}
+
+	private static void configCommandsGet(CommandSender sender) {
+		sendPrefixMessage(sender, "Current commands are:");
+		 Map<String, Object> map = killStreak.config.getHashMap("commands");
+		 Object[] a = map.keySet().toArray();
+		 int last = 0;
+		 int l = 0;
+		 for (int i = 0; i < a.length; i++) {
+			 if (Integer.parseInt(a[i].toString()) > last) {
+				 last = Integer.parseInt(a[i].toString());
+				 l = i;
+			 }
+		 }
+		 for (int i = 0; i <= Integer.parseInt(a[l].toString()); i++) {
+			 if (!(map.get("" + i) == null)) {
+				 sendMessage(sender, i + ": " + map.get("" + i).toString());
+			 }
+		 }
+	}
+
+
+
+	private static void configCommandsSet(CommandSender sender, String[] args) {
+		 Map<String, Object> map = killStreak.config.getHashMap("commands");
+		 String s;
+		 s = args[4];
+		 for(int i = 5; i < args.length; i++){
+			 s += " " + args[i];
+		 }
+		 map.put(args[3], s);
+		 killStreak.config.setHashMap("commands", map);
+		 killStreak.config.saveConfig();
+		 sendPrefixMessage(sender, "Command set.");
+	}
+
+
 
 	private static void configCommandsHelp(CommandSender sender) {
 		sendPrefixMessage(sender, ChatColor.GREEN + "[" + ChatColor.RED + "Config Help" + ChatColor.GREEN + "]");
@@ -294,8 +376,8 @@ public abstract class CommandHandler {
 	}
 	
 	private static void killsAdd(CommandSender sender, String[] args) {
-		for(Player player: Bukkit.getOnlinePlayers()){
-			if(player.getDisplayName().equalsIgnoreCase(args[2])){
+		for(OfflinePlayer player: Bukkit.getServer().getOfflinePlayers()){
+			if(player.getName().equalsIgnoreCase(args[2])){
 				try{
 					KillHandler.addKills(player, Integer.parseInt(args[3]));
 				}catch(Exception e){
@@ -310,8 +392,8 @@ public abstract class CommandHandler {
 
 
 	private static void killsRemove(CommandSender sender, String[] args) {
-		for(Player player: Bukkit.getOnlinePlayers()){
-			if(player.getDisplayName().equalsIgnoreCase(args[2])){
+		for(OfflinePlayer player: Bukkit.getServer().getOfflinePlayers()){
+			if(player.getName().equalsIgnoreCase(args[2])){
 				KillHandler.removeKills(player);
 				return;
 			}
@@ -322,8 +404,8 @@ public abstract class CommandHandler {
 
 
 	private static void killsSet(CommandSender sender, String[] args) {
-		for(Player player: Bukkit.getOnlinePlayers()){
-			if(player.getDisplayName().equalsIgnoreCase(args[2])){
+		for(OfflinePlayer player: Bukkit.getServer().getOfflinePlayers()){
+			if(player.getName().equalsIgnoreCase(args[2])){
 				try{
 					KillHandler.setKills(player, Integer.parseInt(args[3]));
 				}catch(Exception e){

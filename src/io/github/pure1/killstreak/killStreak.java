@@ -24,12 +24,15 @@ public class killStreak extends JavaPlugin {
 
 	/*
 	 * This update:
+	 * 
+	 * fixed killstreak.kill permission -- check 
+	 * added the ability to access kills of anyone who had ever been on the server
+	 * 
 	 */
 
 	/*
-	 * TODO
 	 * 
-	 * COMMAND TO SET STREAKS INGAME.
+	 * 
 	 */
 
 	/*
